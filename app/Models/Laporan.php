@@ -8,7 +8,8 @@ class Laporan extends Model
 {
     protected $table = 'laporan';
     protected $fillable = [
-           'nama',
+        'user_id',
+        'nama',
         'nim',
         'email',
         'jenis_masalah',
@@ -17,4 +18,12 @@ class Laporan extends Model
         'status',
         'catatan_konselor',
     ];
+
+    /**
+     * Get the user that owns the laporan.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
 
 export default function FormLaporan() {
+  const { user, token, isAuthenticated } = useAuth();
+
   const [form, setForm] = useState({
     nama: "",
     nim: "",
@@ -11,6 +14,17 @@ export default function FormLaporan() {
   });
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState("");
+
+  // Auto-fill user data when authenticated
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      setForm((prev) => ({
+        ...prev,
+        nama: user.name || prev.nama,
+        email: user.email || prev.email,
+      }));
+    }
+  }, [isAuthenticated, user]);
 
   const showToast = (msg) => {
     setToast(msg);
@@ -27,9 +41,19 @@ export default function FormLaporan() {
 
     setLoading(true);
     try {
+      const headers = {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      };
+
+      // Send auth token if logged in
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+
       const response = await fetch("/api/laporan", {
         method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        headers,
         body: JSON.stringify({
           nama: form.nama,
           nim: form.nim,
@@ -44,7 +68,14 @@ export default function FormLaporan() {
       if (!response.ok) throw new Error(data.message || "Terjadi kesalahan");
 
       showToast("Laporan berhasil dikirim! Konselor akan menghubungimu segera.");
-      setForm({ nama: "", nim: "", jenis: "", level: "", cerita: "", email: "" });
+      setForm({
+        nama: user?.name || "",
+        nim: "",
+        jenis: "",
+        level: "",
+        cerita: "",
+        email: user?.email || "",
+      });
     } catch (err) {
       showToast("Gagal mengirim laporan: " + err.message);
     } finally {
@@ -66,6 +97,16 @@ export default function FormLaporan() {
         </div>
 
         <div className="bg-white border border-black/10 rounded-2xl p-10 max-w-2xl">
+          {/* Auth badge */}
+          {isAuthenticated && (
+            <div className="flex items-center gap-2 bg-green-light text-green text-sm px-4 py-2.5 rounded-xl mb-6">
+              <span>✅</span>
+              <span>
+                Kamu masuk sebagai <strong>{user?.name}</strong> — laporan akan otomatis terhubung ke akunmu
+              </span>
+            </div>
+          )}
+
           {/* Nama & NIM */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
             <div>
