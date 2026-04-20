@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ArtikelController;
 
 // Auth routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -24,10 +23,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::get('/user/laporan', [LaporanController::class, 'myReports']);
 });
-
-// Artikel routes (public)
-Route::get('/artikel', [ArtikelController::class, 'index']);
-Route::get('/artikel/{slug}', [ArtikelController::class, 'show']);
 
 // Laporan routes (public)
 Route::get('/laporan', [LaporanController::class, 'index']);

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getLaporans, getArtikels, getPolling } from '../services/api';
+import { getLaporans, getPolling } from '../services/api';
+import { getArticles } from '../../data/artikelData';
 
 function StatCard({ icon, label, value, sub, color, delay }) {
   return (
@@ -35,10 +36,12 @@ export default function DashboardPage() {
   const [loading,  setLoading]  = useState(true);
 
   useEffect(() => {
-    Promise.allSettled([getLaporans(), getArtikels(), getPolling()])
-      .then(([l, a, p]) => {
+    // Artikel dari data statis (localStorage)
+    setArtikels(getArticles());
+
+    Promise.allSettled([getLaporans(), getPolling()])
+      .then(([l, p]) => {
         if (l.status === 'fulfilled') setLaporans(l.value.data || []);
-        if (a.status === 'fulfilled') setArtikels(a.value.data?.data || []);
         if (p.status === 'fulfilled') setPolling(p.value.data?.data || null);
       })
       .finally(() => setLoading(false));

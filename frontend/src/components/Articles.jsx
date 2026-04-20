@@ -1,45 +1,28 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { getPublishedArticles } from "../data/artikelData";
 
 export default function Articles() {
   const [articles, setArticles] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchArticles = async () => {
-      try {
-        const res = await fetch("/api/artikel");
-        if (res.ok) {
-          const data = await res.json();
-          setArticles(data.slice(0, 6)); // Display max 6 on homepage
-        }
-      } catch (err) {
-        console.error("Gagal menarik data artikel", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchArticles();
+    // Ambil artikel dari data statis (localStorage jika sudah diedit admin)
+    const data = getPublishedArticles();
+    setArticles(data.slice(0, 6));
   }, []);
 
-  // Use some default colors sequentially for aesthetics
   const bgColors = ["bg-green-light", "bg-amber-light", "bg-[#EEEDFE]", "bg-[#FCEBEB]"];
 
   return (
     <section id="artikel" className="bg-white px-[5%] py-16">
       <div className="font-serif text-3xl font-semibold mb-2">
-        Artikel & Informasi
+        Artikel &amp; Informasi
       </div>
       <div className="text-gray-400 text-[15px] mb-10">
         Bacaan ringan untuk membantu kamu memahami dan menjaga kesehatan mental
       </div>
-      
-      {loading ? (
-        <div className="flex justify-center items-center py-12">
-          <div className="w-10 h-10 border-4 border-green/20 border-t-green rounded-full animate-spin" />
-        </div>
-      ) : articles.length === 0 ? (
+
+      {articles.length === 0 ? (
         <div className="text-center py-8 text-gray-400">Belum ada artikel tersedia.</div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -51,9 +34,7 @@ export default function Articles() {
                 key={a.id}
                 className="bg-white border border-black/10 rounded-xl overflow-hidden transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg no-underline flex flex-col h-full"
               >
-                <div
-                  className={`h-36 flex items-center justify-center text-5xl flex-shrink-0 ${bgClass}`}
-                >
+                <div className={`h-36 flex items-center justify-center text-5xl flex-shrink-0 ${bgClass}`}>
                   {a.emoji || "📄"}
                 </div>
                 <div className="p-5 flex-1 flex flex-col">
