@@ -15,6 +15,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/admin/logout', [\App\Http\Controllers\AdminAuthController::class, 'logout']);
     Route::get('/admin/mahasiswa', [\App\Http\Controllers\MahasiswaController::class, 'index']);
     Route::patch('/laporan/{id}/status', [\App\Http\Controllers\LaporanController::class, 'updateStatus']);
+    
+    // Artikel admin routes
+    Route::post('/artikel', [\App\Http\Controllers\ArtikelController::class, 'store']);
+    Route::put('/artikel/{id}', [\App\Http\Controllers\ArtikelController::class, 'update']);
+    Route::delete('/artikel/{id}', [\App\Http\Controllers\ArtikelController::class, 'destroy']);
+    
+    // Polling admin routes
+    Route::post('/polling', [\App\Http\Controllers\PollingController::class, 'store']);
 });
 
 // Protected routes
@@ -22,26 +30,19 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
     Route::get('/user/laporan', [LaporanController::class, 'myReports']);
+    Route::put('/laporan/{laporan}', [LaporanController::class, 'update']);
+    Route::delete('/laporan/{laporan}', [LaporanController::class, 'destroy']);
 });
 
 // Laporan routes (public)
 Route::get('/laporan', [LaporanController::class, 'index']);
 Route::post('/laporan', [LaporanController::class, 'store']);
 Route::get('/laporan/{laporan}', [LaporanController::class, 'show']);
-Route::put('/laporan/{laporan}', [LaporanController::class, 'update']);
-Route::delete('/laporan/{laporan}', [LaporanController::class, 'destroy']);
 
-// Polling routes (mock)
-Route::get('/polling', function () {
-    return response()->json([
-        'data' => [
-            'pertanyaan' => 'Seberapa penting kesehatan mental bagi mahasiswa?',
-            'total_votes' => 150,
-            'opsi' => [
-                ['id' => 1, 'teks_opsi' => 'Sangat Penting', 'jumlah_vote' => 120],
-                ['id' => 2, 'teks_opsi' => 'Penting', 'jumlah_vote' => 25],
-                ['id' => 3, 'teks_opsi' => 'Biasa Saja', 'jumlah_vote' => 5],
-            ]
-        ]
-    ]);
-});
+// Artikel routes (public)
+Route::get('/artikel', [\App\Http\Controllers\ArtikelController::class, 'index']);
+Route::get('/artikel/{slug}', [\App\Http\Controllers\ArtikelController::class, 'show']);
+
+// Polling routes
+Route::get('/polling', [\App\Http\Controllers\PollingController::class, 'getActivePolling']);
+Route::post('/polling/{id}/vote', [\App\Http\Controllers\PollingController::class, 'vote']);

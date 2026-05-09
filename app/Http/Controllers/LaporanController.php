@@ -22,19 +22,26 @@ class LaporanController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
+        $validated = $request->validate([
+            'nama' => 'nullable|string|max:255',
+            'nim' => 'nullable|string|max:255',
+            'jenis' => 'required|string|max:255',
+            'level' => 'required|string|max:255',
+            'cerita' => 'required|string',
+            'email' => 'nullable|email|max:255',
+        ]);
 
         // If user is authenticated via Sanctum token, attach user_id
         if ($user = auth('sanctum')->user()) {
-            $data['user_id'] = $user->id;
+            $validated['user_id'] = $user->id;
         }
 
-        $laporan = Laporan::create($data);
+        $laporan = Laporan::create($validated);
 
         return response()->json([
             'message' => 'success',
             'data' => $laporan
-        ]);
+        ], 201);
     }
 
     /**
@@ -50,7 +57,22 @@ class LaporanController extends Controller
      */
     public function update(Request $request, Laporan $laporan)
     {
-        $laporan->update($request->all());
+        // Authorization check
+        $user = auth('sanctum')->user();
+        if (!$user || ($laporan->user_id !== $user->id && $user->role !== 'admin')) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $validated = $request->validate([
+            'nama' => 'nullable|string|max:255',
+            'nim' => 'nullable|string|max:255',
+            'jenis' => 'sometimes|required|string|max:255',
+            'level' => 'sometimes|required|string|max:255',
+            'cerita' => 'sometimes|required|string',
+            'email' => 'nullable|email|max:255',
+        ]);
+
+        $laporan->update($validated);
 
         return response()->json([
             'message' => 'updated',
@@ -63,6 +85,12 @@ class LaporanController extends Controller
      */
     public function destroy(Laporan $laporan)
     {
+        // Authorization check
+        $user = auth('sanctum')->user();
+        if (!$user || ($laporan->user_id !== $user->id && $user->role !== 'admin')) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
         $laporan->delete();
 
         return response()->json([

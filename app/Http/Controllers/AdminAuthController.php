@@ -13,13 +13,16 @@ class AdminAuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        $user = \App\Models\User::where('name', $request->username)
+        $user = \App\Models\User::where(function($query) use ($request) {
+                $query->where('name', $request->username)
+                      ->orWhere('email', $request->username);
+            })
             ->where('role', 'admin')
             ->first();
 
         if (!$user || !\Illuminate\Support\Facades\Hash::check($request->password, $user->password)) {
             return response()->json([
-                'message' => 'Username atau password salah, atau Anda bukan admin.'
+                'message' => 'Username/Email atau password salah, atau Anda bukan admin.'
             ], 401);
         }
 
