@@ -1,6 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap');
-
 @import "tailwindcss";
+
+@theme {
+  --font-sans: "DM Sans", sans-serif;
+  --font-serif: "Playfair Display", serif;
+
+  --color-green: #0F6E56;
+  --color-green-mid: #1D9E75;
+  --color-green-light: #E1F5EE;
+  --color-green-soft: #9FE1CB;
+  --color-green-dark: #0d5e48;
+
+  --color-amber: #BA7517;
+  --color-amber-light: #FAEEDA;
+
+  --color-bg: #fafaf8;
+}
 
 @layer base {
   html { scroll-behavior: smooth; }
