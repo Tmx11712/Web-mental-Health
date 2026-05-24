@@ -1,0 +1,8 @@
+{
+    "rewrites": [
+        {
+            "source": "/api/:path*",
+            "destination": "https://white-finch-253117.hostingersite.com/api/:path*"
+        }
+    ]
+}
