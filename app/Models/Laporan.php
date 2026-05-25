@@ -6,22 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Laporan extends Model
 {
-    protected $table = 'laporan';
+    protected $table = 'laporans';
     protected $fillable = [
         'user_id',
         'nama',
         'nim',
         'email',
-        'jenis_masalah',
-        'tingkat_keparahan',
-        'deskripsi',
+        'jenis',
+        'level',
+        'cerita',
         'status',
         'catatan_konselor',
     ];
 
-    /**
-     * Get the user that owns the laporan.
-     */
     public function user()
     {
         return $this->belongsTo(User::class);
