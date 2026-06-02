@@ -1,28 +1,29 @@
-import axios from 'axios';
+import axios from "axios";
 
 const api = axios.create({
-  baseURL: '/api',
-  headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    baseURL: import.meta.env.VITE_API_URL || "/api",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('admin_token');
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
+    const token = localStorage.getItem("admin_token");
+    if (token) config.headers.Authorization = `Bearer ${token}`;
+    return config;
 });
 
 // Auth
-export const adminLogin  = (data) => api.post('/admin/login', data);
-export const adminLogout = ()     => api.post('/admin/logout');
-export const adminMe     = ()     => api.get('/admin/me');
+export const adminLogin = (data) => api.post("/admin/login", data);
+export const adminLogout = () => api.post("/admin/logout");
+export const adminMe = () => api.get("/admin/me");
 
 // Laporan
-export const getLaporans         = (params) => api.get('/laporan', { params });
-export const getLaporan          = (id)     => api.get(`/laporan/${id}`);
-export const updateStatusLaporan = (id, data) => api.patch(`/laporan/${id}/status`, data);
-export const hapusLaporan        = (id)     => api.delete(`/laporan/${id}`);
+export const getLaporans = (params) => api.get("/laporan", { params });
+export const getLaporan = (id) => api.get(`/laporan/${id}`);
+export const updateStatusLaporan = (id, data) =>
+    api.patch(`/laporan/${id}/status`, data);
+export const hapusLaporan = (id) => api.delete(`/laporan/${id}`);
 
 // Polling
-export const getPolling = () => api.get('/polling');
+export const getPolling = () => api.get("/polling");
 
 export default api;

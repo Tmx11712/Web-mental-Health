@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
+import { apiUrl } from "../lib/api";
 
 export default function FormLaporan() {
     const { user, token, isAuthenticated } = useAuth();
@@ -57,7 +58,7 @@ export default function FormLaporan() {
                 headers["Authorization"] = `Bearer ${token}`;
             }
 
-            const response = await fetch("/api/laporan", {
+            const response = await fetch(apiUrl("/laporan"), {
                 method: "POST",
                 headers,
                 body: JSON.stringify({
