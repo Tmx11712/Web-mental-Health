@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('laporan', function (Blueprint $table) {
-            if (!Schema::hasColumn('laporan', 'status')) {
+        Schema::table('laporans', function (Blueprint $table) {
+            if (!Schema::hasColumn('laporans', 'status')) {
                 $table->string('status')->default('baru');
             }
-            if (!Schema::hasColumn('laporan', 'catatan_konselor')) {
+            if (!Schema::hasColumn('laporans', 'catatan_konselor')) {
                 $table->text('catatan_konselor')->nullable();
             }
         });
@@ -26,11 +26,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('laporan', function (Blueprint $table) {
-            if (Schema::hasColumn('laporan', 'status')) {
+        Schema::table('laporans', function (Blueprint $table) {
+            if (Schema::hasColumn('laporans', 'status')) {
                 $table->dropColumn('status');
             }
-            if (Schema::hasColumn('laporan', 'catatan_konselor')) {
+            if (Schema::hasColumn('laporans', 'catatan_konselor')) {
                 $table->dropColumn('catatan_konselor');
             }
         });

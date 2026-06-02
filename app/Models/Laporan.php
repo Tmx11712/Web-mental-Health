@@ -19,6 +19,23 @@ class Laporan extends Model
         'catatan_konselor',
     ];
 
+    protected $appends = ['jenis_masalah', 'tingkat_keparahan', 'deskripsi'];
+
+    public function getJenisMasalahAttribute()
+    {
+        return $this->attributes['jenis'] ?? null;
+    }
+
+    public function getTingkatKeparahanAttribute()
+    {
+        return $this->attributes['level'] ?? null;
+    }
+
+    public function getDeskripsiAttribute()
+    {
+        return $this->attributes['cerita'] ?? null;
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
